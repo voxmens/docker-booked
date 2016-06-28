@@ -10,7 +10,7 @@ RUN apt-get update && \
     unzip \
     mysql-client
 
-RUN docker-php-ext-install mysql
+RUN docker-php-ext-install mysql mysqli pdo pdo_mysql
 
 RUN cd /var/www && curl -L -Os https://sourceforge.net/projects/phpscheduleit/files/latest/booked-2.5.20.zip && \
     unzip booked-2.5.20.zip && \
