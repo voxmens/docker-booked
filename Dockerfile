@@ -8,9 +8,14 @@ RUN apt-get update && \
     apt-get install -y vim \
     curl \
     unzip \
-    mysql-client
+    mysql-client \
+    libpng12-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev
 
-RUN docker-php-ext-install mysql mysqli pdo pdo_mysql
+RUN docker-php-ext-install -j$(nproc) mysql mysqli pdo pdo_mysql \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd
 
 RUN cd /var/www && curl -L -Os https://sourceforge.net/projects/phpscheduleit/files/latest/booked-2.5.20.zip && \
     unzip booked-2.5.20.zip && \
@@ -23,10 +28,6 @@ RUN cd /var/www && curl -L -Os https://sourceforge.net/projects/phpscheduleit/fi
 RUN cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/booked.conf && \
     sed -i 's,/var/www/html,/var/www/booked,g' /etc/apache2/sites-available/booked.conf && \
     sed -i 's,${APACHE_LOG_DIR},/var/log/apache2,g' /etc/apache2/sites-available/booked.conf && \
-    a2ensite booked.conf
+    a2ensite booked.conf && a2enmod rewrite
 
 WORKDIR /var/www/booked
-
-EXPOSE 80 443
-
-CMD ["apache2-foreground"]
