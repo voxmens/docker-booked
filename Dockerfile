@@ -22,7 +22,7 @@ RUN cd /var/www && curl -L -Os https://sourceforge.net/projects/phpscheduleit/fi
     chown www-data: /var/www/booked -R && \
     chmod 0755 /var/www/booked -R && \
     cp booked/config/config.dist.php booked/config/config.php && \
-    sed -i 's,127.0.0.1,mysql,g' /var/www/booked/config/config.php && \
+    sed -i 's,127.0.0.1,ttmysqldb,g' /var/www/booked/config/config.php && \
     sed -i 's,$conf['settings']['database']['password'] = 'password';,$conf['settings']['database']['password'] = '$MYSQL_PASSWORD';,g' /var/www/booked/config/config.php
 
 RUN cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/booked.conf && \
@@ -31,3 +31,8 @@ RUN cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-availabl
     a2ensite booked.conf && a2enmod rewrite
 
 WORKDIR /var/www/booked
+
+EXPOSE 80 443
+
+CMD ["apache2-foreground"]
+
