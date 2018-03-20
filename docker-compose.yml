@@ -1,0 +1,20 @@
+version: "3"
+services:
+  app:
+    build: .
+    image: bobdrummond/booked
+    ports:
+      - 80
+    volumes:
+      - ./config.php:/var/www/booked/config/config.php:ro
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql/mysql-server:5.7
+    volumes:
+      - data:/var/lib/mysql
+    env_file: mysql.env
+
+volumes:
+  data:

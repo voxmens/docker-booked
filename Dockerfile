@@ -17,8 +17,8 @@ RUN docker-php-ext-install -j$(nproc) mysql mysqli pdo pdo_mysql \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd
 
-RUN cd /var/www && curl -L -Os https://sourceforge.net/projects/phpscheduleit/files/latest/booked-2.5.20.zip && \
-    unzip booked-2.5.20.zip && \
+RUN cd /var/www && curl -L -Os https://sourceforge.net/projects/phpscheduleit/files/latest/booked-2.6.8.zip && \
+    unzip booked-2.6.8.zip && \
     chown www-data: /var/www/booked -R && \
     chmod 0755 /var/www/booked -R && \
     cp booked/config/config.dist.php booked/config/config.php && \
@@ -28,7 +28,7 @@ RUN cd /var/www && curl -L -Os https://sourceforge.net/projects/phpscheduleit/fi
 RUN cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/booked.conf && \
     sed -i 's,/var/www/html,/var/www/booked,g' /etc/apache2/sites-available/booked.conf && \
     sed -i 's,${APACHE_LOG_DIR},/var/log/apache2,g' /etc/apache2/sites-available/booked.conf && \
-    a2ensite booked.conf && a2enmod rewrite
+    a2ensite booked.conf && a2dissite 000-default.conf && a2enmod rewrite
 
 WORKDIR /var/www/booked
 
