@@ -18,7 +18,7 @@ RUN docker-php-ext-install -j$(nproc) mysql mysqli pdo pdo_mysql \
     && docker-php-ext-install -j$(nproc) gd
 
 RUN cd /var/www && curl -L -Os https://sourceforge.net/projects/phpscheduleit/files/latest/booked-2.7.2.zip && \
-    unzip booked-2.6.8.zip && \
+    unzip booked-2.7.2.zip && \
     chown www-data: /var/www/booked -R && \
     chmod 0755 /var/www/booked -R && \
     cp booked/config/config.dist.php booked/config/config.php && \
