@@ -1,5 +1,4 @@
 FROM php:5.6-apache
-MAINTAINER Mathias Gebbe <mathias.gebbe@gmail.com>
 ENV MYSQL_PASSWORD password
 
 COPY php.ini /usr/local/etc/php/
