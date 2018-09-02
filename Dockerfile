@@ -34,4 +34,3 @@ WORKDIR /var/www/booked
 EXPOSE 80 443
 
 CMD ["apache2-foreground"]
-
