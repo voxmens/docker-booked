@@ -16,7 +16,7 @@ RUN docker-php-ext-install -j$(nproc) mysql mysqli pdo pdo_mysql \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd
 
-RUN cd /var/www && curl -L -Os https://sourceforge.net/projects/phpscheduleit/files/latest/booked-2.6.8.zip && \
+RUN cd /var/www && curl -L -Os https://sourceforge.net/projects/phpscheduleit/files/Booked/2.6/booked-2.6.8.zip/download && \
     unzip booked-2.6.8.zip && \
     chown www-data: /var/www/booked -R && \
     chmod 0755 /var/www/booked -R && \
