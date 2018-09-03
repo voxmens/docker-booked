@@ -1,4 +1,6 @@
 FROM php:5.6-apache
+MAINTAINER Olaxe
+
 ENV MYSQL_PASSWORD password
 ENV BOOKED_DL_URL "https://sourceforge.net/projects/phpscheduleit/files/Booked/2.7/booked-2.7.2.zip"
 ENV BOOKED_DL_FILE "booked-2.7.2.zip"
@@ -24,7 +26,7 @@ RUN cd /var/www && curl -L -Os $BOOKED_DL_URL && \
     chown www-data: /var/www/booked -R && \
     chmod 0755 /var/www/booked -R && \
     cp booked/config/config.dist.php booked/config/config.php && \
-    sed -i 's,$conf['settings']['install.password'] = '';,$conf['settings']['install.password'] = getenv('BOOKED_INSTALL_PASSWORD');,g' /var/www/booked/config/config.php && \
+    sed -i -e '/install.password/ s/=.*/= getenv('BOOKED_INSTALL_PASSWORD');/' /var/www/booked/config/config.php && \
     sed -i 's,$conf['settings']['database']['password'] = 'password';,$conf['settings']['database']['password'] = '$MYSQL_PASSWORD';,g' /var/www/booked/config/config.php
 
 RUN cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/booked.conf && \
