@@ -1,6 +1,7 @@
 FROM php:5.6-apache
 ENV MYSQL_PASSWORD password
 ENV BOOKED_DL_URL "https://sourceforge.net/projects/phpscheduleit/files/Booked/2.7/booked-2.7.2.zip"
+ENV BOOKED_DL_FILE $(basename -- "$BOOKED_DL_URL")
 ENV BOOKED_WEB_URL "http://localhost/Web"
 
 COPY php.ini /usr/local/etc/php/
@@ -18,8 +19,8 @@ RUN docker-php-ext-install -j$(nproc) mysql mysqli pdo pdo_mysql \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd
 
-RUN cd /var/www && curl -L -Os https://sourceforge.net/projects/phpscheduleit/files/Booked/2.6/booked-2.6.8.zip && \
-    unzip booked-2.6.8.zip && \
+RUN cd /var/www && curl -L -Os $BOOKED_DL_URL && \
+    unzip $BOOKED_DL_FILE && \
     chown www-data: /var/www/booked -R && \
     chmod 0755 /var/www/booked -R && \
     cp booked/config/config.dist.php booked/config/config.php && \
