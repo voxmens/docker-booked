@@ -1,7 +1,7 @@
 FROM php:5.6-apache
-ENV MYSQL_PASSWORD password
-    BOOKED_DL_URL "https://sourceforge.net/projects/phpscheduleit/files/Booked/2.7/booked-2.7.2.zip"
-    BOOKED_DL_FILE "booked-2.7.2.zip"
+ENV MYSQL_PASSWORD password \
+    BOOKED_DL_URL "https://sourceforge.net/projects/phpscheduleit/files/Booked/2.7/booked-2.7.2.zip" \
+    BOOKED_DL_FILE "booked-2.7.2.zip" \
     BOOKED_WEB_URL "http://localhost/Web"
 
 COPY php.ini /usr/local/etc/php/
