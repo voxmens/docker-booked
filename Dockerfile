@@ -26,7 +26,7 @@ RUN cd /var/www && curl -L -Os $BOOKED_DL_URL && \
     chown www-data: /var/www/booked -R && \
     chmod 0755 /var/www/booked -R && \
     cp booked/config/config.dist.php booked/config/config.php && \
-    sed -i -e '/install.password/ s/=.*/= getenv('BOOKED_INSTALL_PASSWORD');/' /var/www/booked/config/config.php && \
+    sed -i -e '/settings'\''\]\['\''install.password/ s/=.*/= getenv('BOOKED_INSTALL_PASSWORD');/' /var/www/booked/config/config.php && \
     sed -i 's,$conf['settings']['database']['password'] = 'password';,$conf['settings']['database']['password'] = '$MYSQL_PASSWORD';,g' /var/www/booked/config/config.php
 
 RUN cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/booked.conf && \
