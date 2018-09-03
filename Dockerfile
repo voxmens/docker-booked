@@ -55,6 +55,13 @@ RUN cd /var/www && curl -L -Os $BOOKED_DL_URL && \
     sed -i -e '/app.title/ s/=.*/= getenv('BOOKED_APP_TITLE');/' /var/www/booked/config/config.php && \
     sed -i -e '/default.timezone/ s/=.*/= getenv('BOOKED_DEFAULT_TIMEZONE');/' /var/www/booked/config/config.php && \
     sed -i -e '/allow.self.registration/ s/=.*/= getenv('BOOKED_ALLOW_SELF_REGISTRATION');/' /var/www/booked/config/config.php && \
+    sed -i -e '/admin.email/ s/=.*/= getenv('BOOKED_ADMIN_EMAIL');/' /var/www/booked/config/config.php && \
+    sed -i -e '/admin.email.name/ s/=.*/= getenv('BOOKED_ADMIN_EMAIL_NAME');/' /var/www/booked/config/config.php && \
+    sed -i -e '/enable.email/ s/=.*/= getenv('BOOKED_ENABLE_EMAIL');/' /var/www/booked/config/config.php && \
+    sed -i -e '/default.language/ s/=.*/= getenv('BOOKED_DEFAULT_LANGUAGE');/' /var/www/booked/config/config.php && \
+    sed -i -e '/script.url/ s/=.*/= getenv('BOOKED_WEB_URL');/' /var/www/booked/config/config.php && \
+    sed -i -e '/home.url/ s/=.*/= getenv('BOOKED_WEB_URL').'/dashboard.php';/' /var/www/booked/config/config.php && \
+    sed -i -e '/logout.url/ s/=.*/= getenv('BOOKED_WEB_URL');/' /var/www/booked/config/config.php && \
     
     sed -i -e '/settings'\''\]\['\''install.password/ s/=.*/= getenv('BOOKED_INSTALL_PASSWORD');/' /var/www/booked/config/config.php && \
     sed -i 's,$conf['settings']['database']['password'] = 'password';,$conf['settings']['database']['password'] = '$MYSQL_PASSWORD';,g' /var/www/booked/config/config.php
