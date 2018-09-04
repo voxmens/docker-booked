@@ -11,6 +11,7 @@ ENV BOOKED_ADMIN_EMAIL_NAME "Booked Administrator"
 ENV BOOKED_ENABLE_EMAIL "true"
 ENV BOOKED_DEFAULT_LANGUAGE "en_us"
 ENV BOOKED_WEB_URL "http://localhost/Web"
+ENV BOOKED_HOME_URL "$BOOKED_WEB_URL/dashboard.php"
 ENV BOOKED_DATABASE_TYPE "mysql"
 ENV BOOKED_DATABASE_USER "booked_user"
 ENV BOOKED_DATABASE_PASSWORD "password"
@@ -60,7 +61,7 @@ RUN sed -i -e '/admin.email.name/ s/=.*/= getenv('BOOKED_ADMIN_EMAIL_NAME');/' /
 RUN sed -i -e '/enable.email/ s/=.*/= getenv('BOOKED_ENABLE_EMAIL');/' /var/www/booked/config/config.php
 RUN sed -i -e '/default.language/ s/=.*/= getenv('BOOKED_DEFAULT_LANGUAGE');/' /var/www/booked/config/config.php
 RUN sed -i -e '/script.url/ s/=.*/= getenv('BOOKED_WEB_URL');/' /var/www/booked/config/config.php
-RUN sed -i -e '/home.url/ s/=.*/= getenv('BOOKED_WEB_URL').'\''/dashboard.php'\'';/' /var/www/booked/config/config.php
+RUN sed -i -e '/home.url/ s/=.*/= getenv('BOOKED_HOME_URL');/' /var/www/booked/config/config.php
 RUN sed -i -e '/logout.url/ s/=.*/= getenv('BOOKED_WEB_URL');/' /var/www/booked/config/config.php
 RUN sed -i -e '/setting'\''s\]\['\''install.password/ s/=.*/= getenv('BOOKED_INSTALL_PASSWORD');/' /var/www/booked/config/config.php
 RUN sed -i 's,$conf['settings']['database']['password'] = 'password';,$conf['settings']['database']['password'] = '$MYSQL_PASSWORD';,g' /var/www/booked/config/config.php
