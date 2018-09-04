@@ -48,7 +48,7 @@ RUN apt-get update && \
     g++
 
 RUN docker-php-ext-configure intl \
-    docker-php-ext-install intl
+    && docker-php-ext-install intl
 
 RUN docker-php-ext-install -j$(nproc) mysql mysqli pdo pdo_mysql \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
