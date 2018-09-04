@@ -50,8 +50,6 @@ RUN docker-php-ext-install -j$(nproc) mysql mysqli pdo pdo_mysql \
 
 RUN cd /var/www && curl -L -Os $BOOKED_DL_URL && \
     unzip $BOOKED_DL_FILE && \
-    chown www-data: /var/www/booked -R && \
-    chmod 0755 /var/www/booked -R && \
     cp booked/config/config.dist.php booked/config/config.php
 RUN sed -i -e '/app.title/ s/=.*/= getenv('BOOKED_APP_TITLE');/' /var/www/booked/config/config.php
 RUN sed -i -e '/default.timezone/ s/=.*/= getenv('BOOKED_DEFAULT_TIMEZONE');/' /var/www/booked/config/config.php
@@ -83,7 +81,9 @@ RUN sed -i -e '/email'\''\]\['\''default.from.address/ s/=.*/= getenv('BOOKED_EM
 RUN sed -i -e '/email'\''\]\['\''default.from.name/ s/=.*/= getenv('BOOKED_EMAIL_DEFAULT_FROM_NAME');/' /var/www/booked/config/config.php
 RUN sed -i -e '/credits'\''\]\['\''enable/ s/=.*/= getenv('BOOKED_CREDITS_ENABLED');/' /var/www/booked/config/config.php
 RUN sed -i -e '/credits'\''\]\['\''allow.purchase/ s/=.*/= getenv('BOOKED_CREDITS_ALLOW_PURCHASE');/' /var/www/booked/config/config.php
-RUN chown www-data: /var/www/booked/config/config.php
+#RUN if [ $BOOKED_UPCOMING_RESERVATIONS <> "13" ] ; then '$lastDate = $now->AddDays(13-$dayOfWeek-1);' -> '$lastDate = $now->AddDays(60-$dayOfWeek-1);' - UpcomingReservationsPresenter.php
+RUN chown www-data: /var/www/booked -R && \
+    chmod 0755 /var/www/booked -R
 RUN cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/booked.conf && \
     sed -i 's,/var/www/html,/var/www/booked,g' /etc/apache2/sites-available/booked.conf && \
     sed -i 's,${APACHE_LOG_DIR},/var/log/apache2,g' /etc/apache2/sites-available/booked.conf && \
