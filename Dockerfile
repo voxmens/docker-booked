@@ -4,7 +4,8 @@ MAINTAINER Olaxe
 ENV BOOKED_DL_URL "https://sourceforge.net/projects/phpscheduleit/files/Booked/2.7/booked-2.7.2.zip"
 ENV BOOKED_DL_FILE "booked-2.7.2.zip"
 ENV BOOKED_APP_TITLE "Booked Scheduler"
-ENV BOOKED_DEFAULT_TIMEZONE "America/Chicago"
+ENV BOOKED_DEFAULT_TIMEZONE "Europe/Paris"
+ENV TZ $BOOKED_DEFAULT_TIMEZONE
 ENV BOOKED_ALLOW_SELF_REGISTRATION "true"
 ENV BOOKED_ADMIN_EMAIL "admin@example.com"
 ENV BOOKED_ADMIN_EMAIL_NAME "Booked Administrator"
@@ -77,6 +78,8 @@ RUN apt-get update && \
     zlib1g-dev \
     libicu-dev \
     g++
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN docker-php-ext-configure intl \
     && docker-php-ext-install intl
