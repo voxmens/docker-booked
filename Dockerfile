@@ -12,6 +12,7 @@ ENV BOOKED_DEFAULT_PAGE_SIZE "50"
 ENV BOOKED_ENABLE_EMAIL "true"
 ENV BOOKED_DEFAULT_LANGUAGE "en_us"
 ENV BOOKED_WEB_URL "http://localhost/Web"
+ENV BOOKED_DEFAULT_HOMEPAGE "1"
 ENV BOOKED_REGISTRATION_CAPTCHA_ENABLED "true"
 ENV BOOKED_REGISTRATION_REQUIRE_EMAIL_ACTIVATION "false"
 ENV BOOKED_REGISTRATION_AUTO_SUBSCRIBE_EMAIL "false"
@@ -102,6 +103,7 @@ RUN sed -i -e '/registration.auto.subscribe.email/ s/=.*/= getenv('BOOKED_REGIST
 RUN sed -i -e '/registration.notify.admin/ s/=.*/= getenv('BOOKED_REGISTRATION_NOTIFY_ADMIN');/' /var/www/booked/config/config.php
 RUN sed -i -e '/home.url/ s/=.*/= getenv('BOOKED_HOME_URL');/' /var/www/booked/config/config.php
 RUN sed -i -e '/logout.url/ s/=.*/= getenv('BOOKED_WEB_URL');/' /var/www/booked/config/config.php
+RUN sed -i -e '/default.homepage/ s/=.*/= getenv('BOOKED_DEFAULT_HOMEPAGE');/' /var/www/booked/config/config.php
 RUN sed -i -e '/schedule'\''\]\['\''use.per.user.colors/ s/=.*/= getenv('BOOKED_SCHEDULE_USE_PER_USER_COLORS');/' /var/www/booked/config/config.php
 RUN sed -i -e '/schedule'\''\]\['\''show.inaccessible.resources/ s/=.*/= getenv('BOOKED_SCHEDULE_SHOW_INACCESSIBLE_RESOURCES');/' /var/www/booked/config/config.php
 RUN sed -i -e '/schedule'\''\]\['\''reservation.label/ s/=.*/= getenv('BOOKED_SCHEDULE_RESERVATION_LABEL');/' /var/www/booked/config/config.php
@@ -147,6 +149,7 @@ RUN sed -i -e '/reservation.labels'\''\]\['\''resource.calendar/ s/=.*/= getenv(
 RUN sed -i -e '/reservation.labels'\''\]\['\''reservation.popup/ s/=.*/= getenv('BOOKED_RESERVATION_LABELS_RESERVATION_POPUP');/' /var/www/booked/config/config.php
 RUN sed -i -e '/credits'\''\]\['\''enable/ s/=.*/= getenv('BOOKED_CREDITS_ENABLED');/' /var/www/booked/config/config.php
 RUN sed -i -e '/credits'\''\]\['\''allow.purchase/ s/=.*/= getenv('BOOKED_CREDITS_ALLOW_PURCHASE');/' /var/www/booked/config/config.php
+#RUN if [ $BOOKED_UPCOMING_RESERVATIONS <> "13" ] ; then '$lastDate = $now->AddDays(13-$dayOfWeek-1);' -> '$lastDate = $now->AddDays(60-$dayOfWeek-1);' - UpcomingReservationsPresenter.php
 #RUN if [ $BOOKED_UPCOMING_RESERVATIONS <> "13" ] ; then '$lastDate = $now->AddDays(13-$dayOfWeek-1);' -> '$lastDate = $now->AddDays(60-$dayOfWeek-1);' - UpcomingReservationsPresenter.php
 RUN chown www-data: /var/www/booked -R && \
     chmod 0755 /var/www/booked -R
