@@ -3,7 +3,7 @@ docker-booked
 =============
 
 .. image:: https://img.shields.io/docker/build/mkdryden/docker-booked
-   :target: https://hub.docker.com/repository/docker/mkdryden/docker-booked
+   :target: https://hub.docker.com/r/mkdryden/docker-booked
    :alt: Docker Build Status
 
 --------
