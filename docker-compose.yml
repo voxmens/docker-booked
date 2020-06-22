@@ -38,7 +38,7 @@ services:
       deck-chores.autorelease.jitter: 10
       deck-chores.missedcheckin.command: php -f /var/www/booked/Jobs/sendmissedcheckin.php
       deck-chores.missedcheckin.interval: every minute
-      deck-chores.missedcheckin.jitter: 10
+      deck-chores.missedcheckin.jitter: 0
       deck-chores.waitlist.command: php -f /var/www/booked/Jobs/sendwaitlist.php
       deck-chores.waitlist.interval: every minute
       deck-chores.waitlist.jitter: 10
