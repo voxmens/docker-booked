@@ -42,7 +42,7 @@ ENV BOOKED_APP_TITLE="Booked Scheduler" \
     BOOKED_REGISTRATION_AUTO_SUBSCRIBE_EMAIL="false" \
     BOOKED_REGISTRATION_NOTIFY_ADMIN="false" \
     BOOKED_INACTIVITY_TIMEOUT="" \
-    BOOKED_HOME_URL="$BOOKED_WEB_URL/dashboard.php" \
+    BOOKED_HOME_URL="dashboard.php" \
     BOOKED_SCHEDULE_USE_PER_USER_COLORS="false" \
     BOOKED_SCHEDULE_SHOW_INACCESSIBLE_RESOURCES="true" \
     BOOKED_SCHEDULE_RESERVATION_LABEL="{name}" \
@@ -53,10 +53,14 @@ ENV BOOKED_APP_TITLE="Booked Scheduler" \
     BOOKED_PRIVACY_HIDE_USER_DETAILS="false" \
     BOOKED_PRIVACY_HIDE_RESERVATION_DETAILS="false" \
     BOOKED_PRIVACY_ALLOW_GUEST_RESERVATIONS="false" \
+    BOOKED_RESERVATION_START_TIME_CONSTRAINT="future" \
+    BOOKED_RESERVATION_PREVENT_PARTICIPATION="false" \
     BOOKED_RESERVATION_ENABLE_REMINDERS="false" \
     BOOKED_RESERVATION_ALLOW_GUEST_PARTICIPATION="false" \
     BOOKED_RESERVATION_ALLOW_WAIT_LIST="false" \
     BOOKED_RESERVATION_CHECKIN_MINUTES_PRIOR="5" \
+    BOOKED_RESERVATION_DEFAULT_START_REMINDER="" \
+    BOOKED_RESERVATION_DEFAULT_END_REMINDER="" \
     BOOKED_RESERVATION_TITLE_REQUIRED="false" \
     BOOKED_RESERVATION_DESCRIPTION_REQUIRED="false" \
     BOOKED_UPLOADS_ENABLE_RESERVATION_ATTACHMENTS="false" \
@@ -127,10 +131,14 @@ RUN sed -i -e '/app.title/ s/=.*/= getenv("BOOKED_APP_TITLE");/' /var/www/booked
     sed -i -e '/privacy'\''\]\['\''hide.user.details/ s/=.*/= getenv("BOOKED_PRIVACY_HIDE_USER_DETAILS");/' /var/www/booked/config/config.php && \
     sed -i -e '/privacy'\''\]\['\''hide.reservation.details/ s/=.*/= getenv("BOOKED_PRIVACY_HIDE_RESERVATION_DETAILS");/' /var/www/booked/config/config.php && \
     sed -i -e '/privacy'\''\]\['\''allow.guest.reservations/ s/=.*/= getenv("BOOKED_PRIVACY_ALLOW_GUEST_RESERVATIONS");/' /var/www/booked/config/config.php && \
+    sed -i -e '/reservation'\''\]\['\''start.time.constraint/ s/=.*/= getenv("BOOKED_RESERVATION_START_TIME_CONSTRAINT");/' /var/www/booked/config/config.php && \
     sed -i -e '/reservation'\''\]\['\''enable.reminders/ s/=.*/= getenv("BOOKED_RESERVATION_ENABLE_REMINDERS");/' /var/www/booked/config/config.php && \
+    sed -i -e '/reservation'\''\]\['\''prevent.participation/ s/=.*/= getenv("BOOKED_RESERVATION_PREVENT_PARTICIPATION");/' /var/www/booked/config/config.php && \
     sed -i -e '/reservation'\''\]\['\''allow.guest.reservations/ s/=.*/= getenv("BOOKED_RESERVATION_ALLOW_GUEST_PARTICIPATION");/' /var/www/booked/config/config.php && \
     sed -i -e '/reservation'\''\]\['\''allow.wait.list/ s/=.*/= getenv("BOOKED_RESERVATION_ALLOW_WAIT_LIST");/' /var/www/booked/config/config.php && \
     sed -i -e '/reservation'\''\]\['\''checkin.minutes.prior/ s/=.*/= getenv("BOOKED_RESERVATION_CHECKIN_MINUTES_PRIOR");/' /var/www/booked/config/config.php && \
+    sed -i -e '/reservation'\''\]\['\''default.start.reminder/ s/=.*/= getenv("BOOKED_RESERVATION_DEFAULT_START_REMINDER");/' /var/www/booked/config/config.php && \
+    sed -i -e '/reservation'\''\]\['\''default.end.reminder/ s/=.*/= getenv("BOOKED_RESERVATION_DEFAULT_END_REMINDER");/' /var/www/booked/config/config.php && \
     sed -i -e '/reservation'\''\]\['\''title.required/ s/=.*/= getenv("BOOKED_RESERVATION_TITLE_REQUIRED");/' /var/www/booked/config/config.php && \
     sed -i -e '/reservation'\''\]\['\''description.required/ s/=.*/= getenv("BOOKED_RESERVATION_DESCRIPTION_REQUIRED");/' /var/www/booked/config/config.php && \
     sed -i -e '/uploads'\''\]\['\''enable.reservation.attachments/ s/=.*/= getenv("BOOKED_UPLOADS_ENABLE_RESERVATION_ATTACHMENTS");/' /var/www/booked/config/config.php && \
