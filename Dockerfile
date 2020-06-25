@@ -3,10 +3,6 @@ MAINTAINER mkdryden
 
 SHELL ["/bin/bash", "-c"]
 
-ARG VERSION='2.8.2'
-
-COPY php.ini /usr/local/etc/php/
-
 RUN apt-get update && \
     apt-get install -y curl \
     unzip \
@@ -17,7 +13,8 @@ RUN apt-get update && \
     zlib1g-dev \
     libicu-dev \
     g++ \
-    sendmail
+    sendmail \
+    git
 
 RUN docker-php-ext-configure intl \
     && docker-php-ext-install intl
@@ -27,8 +24,7 @@ RUN docker-php-ext-install -j$(nproc) mysqli pdo pdo_mysql \
     && docker-php-ext-install -j$(nproc) gd
 
 ENV BOOKED_APP_TITLE="Booked Scheduler" \
-    BOOKED_DEFAULT_TIMEZONE="Europe/Paris" \
-    TZ=$BOOKED_DEFAULT_TIMEZONE \
+    BOOKED_DEFAULT_TIMEZONE=$TIMEZONE \
     BOOKED_ALLOW_SELF_REGISTRATION="true" \
     BOOKED_ADMIN_EMAIL="admin@example.com" \
     BOOKED_ADMIN_EMAIL_NAME="Booked Administrator" \
@@ -48,6 +44,8 @@ ENV BOOKED_APP_TITLE="Booked Scheduler" \
     BOOKED_SCHEDULE_RESERVATION_LABEL="{name}" \
     BOOKED_SCHEDULE_HIDE_BLOCKED_PERIODS="false" \
     BOOKED_ICS_SUBSCRIPTION_KEY="" \
+    BOOKED_ICS_PAST_DAYS="30" \
+    BOOKED_ICS_FUTURE_DAYS="30" \
     BOOKED_PRIVACY_VIEW_SCHEDULES="false" \
     BOOKED_PRIVACY_VIEW_RESERVATIONS="false" \
     BOOKED_PRIVACY_HIDE_USER_DETAILS="false" \
@@ -96,13 +94,28 @@ ENV BOOKED_APP_TITLE="Booked Scheduler" \
     BOOKED_AUTHENTICATION_ALLOW_FACEBOOK_LOGIN="false" \
     BOOKED_AUTHENTICATION_ALLOW_GOOGLE_LOGIN="false"
 
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+ARG TIMEZONE='America/Toronto'
+RUN echo $TIMEZONE && ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE > /etc/timezone
 
-RUN echo $VERSION; \
-    oIFS="$IFS"; IFS=.; set -- $VERSION; IFS='$oIFS'; IFS='$oIFS'; \
-    cd /var/www && curl -L -Os "https://sourceforge.net/projects/phpscheduleit/files/Booked/$1.$2/booked-$VERSION.zip" && \
-    unzip "booked-$VERSION.zip" && \
-    cp booked/config/config.dist.php booked/config/config.php
+# Patch broken missed checkin email job
+COPY fix_sendmissedcheckin.patch /tmp/
+
+ARG VERSION='2.8.2'
+RUN if [ $VERSION == 'git' ]; then \
+        cd /var/www/ && \
+        git clone --depth 1 https://git.code.sf.net/p/phpscheduleit/source booked; \
+    else \
+        oIFS="$IFS"; IFS=.; set -- $VERSION; IFS='$oIFS'; IFS='$oIFS'; \
+        cd /var/www && curl -L -Os "https://sourceforge.net/projects/phpscheduleit/files/Booked/$1.$2/booked-$VERSION.zip" && \
+        unzip "booked-$VERSION.zip" && \
+        rm "booked-$VERSION.zip"; \
+    fi; \
+    cd /var/www/booked && \
+    cp ./config/config.dist.php ./config/config.php; \
+    git apply --whitespace=fix /tmp/fix_sendmissedcheckin.patch && \
+    rm /tmp/fix_sendmissedcheckin.patch
+
+COPY php.ini /usr/local/etc/php/
 
 RUN sed -i -e '/app.title/ s/=.*/= getenv("BOOKED_APP_TITLE");/' /var/www/booked/config/config.php && \
     sed -i -e '/default.timezone/ s/=.*/= getenv("BOOKED_DEFAULT_TIMEZONE");/' /var/www/booked/config/config.php && \
@@ -126,6 +139,8 @@ RUN sed -i -e '/app.title/ s/=.*/= getenv("BOOKED_APP_TITLE");/' /var/www/booked
     sed -i -e '/schedule'\''\]\['\''reservation.label/ s/=.*/= getenv("BOOKED_SCHEDULE_RESERVATION_LABEL");/' /var/www/booked/config/config.php && \
     sed -i -e '/schedule'\''\]\['\''hide.blocked.periods/ s/=.*/= getenv("BOOKED_SCHEDULE_HIDE_BLOCKED_PERIODS");/' /var/www/booked/config/config.php && \
     sed -i -e '/ics'\''\]\['\''subscription.key/ s/=.*/= getenv("BOOKED_ICS_SUBSCRIPTION_KEY");/' /var/www/booked/config/config.php && \
+    sed -i -e '/ics'\''\]\['\''future.days/ s/=.*/= getenv("BOOKED_ICS_FUTURE_DAYS");/' /var/www/booked/config/config.php && \
+    sed -i -e '/ics'\''\]\['\''past.days/ s/=.*/= getenv("BOOKED_ICS_PAST_DAYS");/' /var/www/booked/config/config.php && \
     sed -i -e '/privacy'\''\]\['\''view.schedules/ s/=.*/= getenv("BOOKED_PRIVACY_VIEW_SCHEDULES");/' /var/www/booked/config/config.php && \
     sed -i -e '/privacy'\''\]\['\''view.reservations/ s/=.*/= getenv("BOOKED_PRIVACY_VIEW_RESERVATIONS");/' /var/www/booked/config/config.php && \
     sed -i -e '/privacy'\''\]\['\''hide.user.details/ s/=.*/= getenv("BOOKED_PRIVACY_HIDE_USER_DETAILS");/' /var/www/booked/config/config.php && \
@@ -134,7 +149,7 @@ RUN sed -i -e '/app.title/ s/=.*/= getenv("BOOKED_APP_TITLE");/' /var/www/booked
     sed -i -e '/reservation'\''\]\['\''start.time.constraint/ s/=.*/= getenv("BOOKED_RESERVATION_START_TIME_CONSTRAINT");/' /var/www/booked/config/config.php && \
     sed -i -e '/reservation'\''\]\['\''enable.reminders/ s/=.*/= getenv("BOOKED_RESERVATION_ENABLE_REMINDERS");/' /var/www/booked/config/config.php && \
     sed -i -e '/reservation'\''\]\['\''prevent.participation/ s/=.*/= getenv("BOOKED_RESERVATION_PREVENT_PARTICIPATION");/' /var/www/booked/config/config.php && \
-    sed -i -e '/reservation'\''\]\['\''allow.guest.reservations/ s/=.*/= getenv("BOOKED_RESERVATION_ALLOW_GUEST_PARTICIPATION");/' /var/www/booked/config/config.php && \
+    sed -i -e '/reservation'\''\]\['\''allow.guest.participation/ s/=.*/= getenv("BOOKED_RESERVATION_ALLOW_GUEST_PARTICIPATION");/' /var/www/booked/config/config.php && \
     sed -i -e '/reservation'\''\]\['\''allow.wait.list/ s/=.*/= getenv("BOOKED_RESERVATION_ALLOW_WAIT_LIST");/' /var/www/booked/config/config.php && \
     sed -i -e '/reservation'\''\]\['\''checkin.minutes.prior/ s/=.*/= getenv("BOOKED_RESERVATION_CHECKIN_MINUTES_PRIOR");/' /var/www/booked/config/config.php && \
     sed -i -e '/reservation'\''\]\['\''default.start.reminder/ s/=.*/= getenv("BOOKED_RESERVATION_DEFAULT_START_REMINDER");/' /var/www/booked/config/config.php && \
