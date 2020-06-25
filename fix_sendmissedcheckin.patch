@@ -1,0 +1,20 @@
+---
+ Jobs/sendmissedcheckin.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Jobs/sendmissedcheckin.php b/Jobs/sendmissedcheckin.php
+index 36fcb2e5c..f6a7f7174 100644
+--- a/Jobs/sendmissedcheckin.php
++++ b/Jobs/sendmissedcheckin.php
+@@ -51,8 +51,8 @@ try
+ 	$reservationViewRepository = new ReservationViewRepository();
+ 
+     $now = Date::Now();
+-    $onlyMissedCheckinReservations = new SqlFilterFreeForm(sprintf("%s=1 AND %s IS NULL AND %s BETWEEN '%s' AND '%s'",
+-        ColumnNames::ENABLE_CHECK_IN, ColumnNames::CHECKIN_DATE, ColumnNames::RESERVATION_START, $now->AddMinutes(-1)->ToDatabase(), $now->ToDatabase()));
++    $onlyMissedCheckinReservations = new SqlFilterFreeForm(sprintf("%s=1 AND %s IS NULL AND ri.start_date BETWEEN '%s' AND '%s'",
++        ColumnNames::ENABLE_CHECK_IN, ColumnNames::CHECKIN_DATE, $now->AddMinutes(-1)->ToDatabase(), $now->ToDatabase()));
+ 	$reservations = $reservationViewRepository->GetList(null, null, null, null, $onlyMissedCheckinReservations)->Results();
+ 
+ 	/** @var ReservationItemView $reservation */
+-- 
