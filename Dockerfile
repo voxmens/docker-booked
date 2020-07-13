@@ -100,6 +100,9 @@ RUN echo $TIMEZONE && ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && ec
 # Patch broken missed checkin email job
 COPY fix_sendmissedcheckin.patch /tmp/
 
+ARG CACHEBUST=1
+RUN echo CACHEBUST=$CACHEBUST
+
 ARG VERSION='2.8.2'
 RUN if [ $VERSION == 'git' ]; then \
         cd /var/www/ && \

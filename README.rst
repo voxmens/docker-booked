@@ -26,7 +26,8 @@ Dockerfile and docker-compose configuration for `Booked <https://www.bookedsched
 Building
 --------
 
-The version of Booked to use for building can be specified using the ``VERSION`` build arg, but if you don't need to change anything you can simply pull from docker hub: ``docker pull mkdryden/docker-booked``
+The version of Booked to use for building can be specified using the ``VERSION`` build arg (set this to ``git`` to build the latest git master), but if you don't need to change anything you can simply pull from docker hub: ``docker pull mkdryden/docker-booked`` (this defaults to 2.8.2).
+To rebuild the ``git`` build, you should also set the ``CACHEBUST`` build arg to make sure the git repo is freshly cloned, e.g., ``--build-arg VERSION=git --build-arg CACHEBUST==$(date +%s)`` . 
 
 
 -------------
@@ -59,3 +60,4 @@ Background Jobs
 By default, the compose configuration uses `deck-chores <https://deck-chores.readthedocs.io>`_ to perform the `background jobs listed here <https://www.bookedscheduler.com/help/background-jobs/>`_ for Booked.
 Note that this requires accessing your docker socket from the ``officer`` container and I'm not sure what happens if you're already running deck-chores in a different container.
 If you prefer, you can simply comment out the container in ``docker-compose.yml`` and either live without the background jobs or else trigger them manually with e.g., a cron job using ``docker-compose exec``.
+There is a bug in the SQL query in ``sendmissedcheckin.php`` that prevents sending missed checkin emails that the Dockerfile patches around, but if it ever gets fixed, it might break the Dockerfile.
