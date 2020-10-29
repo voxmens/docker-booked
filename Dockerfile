@@ -103,7 +103,7 @@ COPY fix_sendmissedcheckin.patch /tmp/
 ARG CACHEBUST=1
 RUN echo CACHEBUST=$CACHEBUST
 
-ARG VERSION='2.8.2'
+ARG VERSION='2.8.5'
 RUN if [ $VERSION == 'git' ]; then \
         cd /var/www/ && \
         git clone --depth 1 https://git.code.sf.net/p/phpscheduleit/source booked; \

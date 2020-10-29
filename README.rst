@@ -26,7 +26,7 @@ Dockerfile and docker-compose configuration for `Booked <https://www.bookedsched
 Building
 --------
 
-The version of Booked to use for building can be specified using the ``VERSION`` build arg (set this to ``git`` to build the latest git master), but if you don't need to change anything you can simply pull from docker hub: ``docker pull mkdryden/docker-booked`` (this defaults to 2.8.2).
+The version of Booked to use for building can be specified using the ``VERSION`` build arg (set this to ``git`` to build the latest git master), but if you don't need to change anything you can simply pull from docker hub: ``docker pull mkdryden/docker-booked`` (this defaults to 2.8.5).
 To rebuild the ``git`` build, you should also set the ``CACHEBUST`` build arg to make sure the git repo is freshly cloned, e.g., ``--build-arg VERSION=git --build-arg CACHEBUST==$(date +%s)`` . 
 
 
