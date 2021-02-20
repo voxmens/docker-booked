@@ -106,12 +106,12 @@ RUN echo CACHEBUST=$CACHEBUST
 ARG VERSION='2.8.5'
 RUN if [ $VERSION == 'git' ]; then \
         cd /var/www/ && \
-        git clone --depth 1 https://git.code.sf.net/p/phpscheduleit/source booked; \
+	git clone --depth 1 https://github.com/americandigitalservices/KairosCalendar.git\
     else \
         oIFS="$IFS"; IFS=.; set -- $VERSION; IFS='$oIFS'; IFS='$oIFS'; \
-        cd /var/www && curl -L -Os "https://sourceforge.net/projects/phpscheduleit/files/Booked/$1.$2/booked-$VERSION.zip" && \
-        unzip "booked-$VERSION.zip" && \
-        rm "booked-$VERSION.zip"; \
+	cd /var/www && curl -L -Os "https://github.com/americandigitalservices/KairosCalendar/archive/$VERSION.zip"
+        unzip "$VERSION.zip" && \
+        rm "$VERSION.zip"; \
     fi; \
     cd /var/www/booked && \
     cp ./config/config.dist.php ./config/config.php; \
